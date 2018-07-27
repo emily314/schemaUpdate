@@ -1,0 +1,7 @@
+{
+  "extends": "./node_modules/@ibm-ics/build/config/tsconfig.common.json",
+  "compilerOptions": {
+    "rootDir": "."
+  },
+  "include": ["src"]
+}

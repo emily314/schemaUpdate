@@ -1,0 +1,19 @@
+{
+  "name": "HelloCassandra",
+  "base": "PersistedModel",
+  "plural": "helloCassandra",
+  "idInjection": false,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "names": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "hidden": ["id"],
+  "validations": [],
+  "acls": [],
+  "methods": {}
+}

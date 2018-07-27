@@ -1,0 +1,28 @@
+{
+  "name": "@connections/resource-base-service-api-tests",
+  "version": "0.0.1",
+  "description": "",
+  "main": "lib/main.js",
+  "scripts": {
+    "clean": "rimraf ./lib/",
+    "build": "npm run clean && tsc",
+    "test": "ts-node ./index.ts",
+    "test:helm": "SERVER=http://resource-base-service:4000 ts-node ./index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "request": "2.87.0",
+    "@ibm-ics/common-lib-test-node": "0.0.1"
+  },
+  "devDependencies": {
+    "ts-node": "6.1.1",
+    "typescript": "2.9.1",
+    "@types/jasmine": "2.8.8",
+    "@types/node": "10.0.8",
+    "cross-env": "5.1.6",
+    "rimraf": "2.6.2",
+    "jasmine": "3.1.0",
+    "jasmine-spec-reporter": "4.2.1"
+  }
+}

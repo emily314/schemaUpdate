@@ -1,0 +1,10 @@
+test_out/unit.xml
+.DS_Store
+node_modules
+node_modules
+coverage
+test-out
+npm-debug.log
+karma_out
+.idea
+docker

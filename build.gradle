@@ -1,0 +1,131 @@
+/*
+ * IBM Confidential
+ *
+ * OCO Source Materials
+ *
+ * Copyright IBM Corp. 2018
+ *
+ * The source code for this program is not published or otherwise
+ * divested of its trade secrets, irrespective of what has been
+ * deposited with the U.S. Copyright Office.
+ */
+
+buildscript {
+  repositories {
+    maven {
+      url REPO_URL
+      credentials {
+        username = REPO_USERNAME
+        password = REPO_PASSWORD
+      }
+    }
+  }
+  dependencies {
+    classpath group: 'toscana', name: 'toscana-common', version: COMMON_PLUGIN_VERSION
+    classpath group: 'toscana-gradle', name: 'helm-plugin', version: '+'
+    classpath group: 'toscana-gradle', name: 'docker-plugin', version: DOCKER_PLUGIN_VERSION
+    classpath group: 'toscana-gradle', name: 'integration-test-plugin', version: '+'
+    classpath group: 'toscana-gradle', name: 'hawkeye-plugin', version: '+'
+    classpath group: 'org.jfrog.buildinfo', name: 'build-info-extractor-gradle', version: ARTIFACTORY_PLUGIN_VERSION
+  }
+
+}
+
+apply plugin: 'toscana-common'
+apply plugin: 'toscana-helm'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'toscana-docker'
+apply plugin: 'toscana-integration-test'
+apply plugin: 'toscana-hawkeye'
+
+def DOCKERFILE_PATH = "${projectDir}/docker/Dockerfile"
+def NODE_FILES_PATH = "${projectDir}/dist8"
+def PACKAGE = "${projectDir}/package.json"
+def NEWRELIC = "${projectDir}/newrelic.js"
+def NODEMODULES = "${projectDir}/node_modules"
+
+repositories {
+    maven {
+        url REPO_URL
+        credentials {
+            username = REPO_USERNAME
+            password = REPO_PASSWORD
+        }
+    }
+}
+
+integrationTest {
+  command = ['npm', 'run', 'test:api']
+}
+
+hawkeye {
+  failOn = "critical"
+}
+
+docker {
+  imageName = PROJECT_ARTIFACT_ID
+  imageTag = project.version
+
+  build {
+    dockerfile = file(DOCKERFILE_PATH)
+    buildArgs = [
+      'VERSION': project.version,
+      'PROJECT_ID' : PROJECT_ARTIFACT_ID,
+      'GIT_BRANCH' : "${GIT_BRANCH}",
+      'GIT_COMMIT' : "${GIT_COMMIT}",
+      'GIT_URL' : "${GIT_URL}"
+    ]
+    files = [
+      'NODEPROJECT': file(NODE_FILES_PATH),
+      'PACKAGE': file(PACKAGE),
+      'NR': file(NEWRELIC),
+      'NODEMODULES': file(NODEMODULES)
+    ]
+  }
+
+  run {
+    startUpWaitTime = 10
+  }
+
+  push {
+    registryUrl = DOCKER_REGISTRY_URL
+    username = DOCKER_REGISTRY_USERNAME
+    password = DOCKER_REGISTRY_PASSWORD
+    email = DOCKER_REGISTRY_EMAIL
+  }
+}
+
+helm {
+    chart = PROJECT_ARTIFACT_ID
+    category = "microservices"
+    renderEnvironments = HELM_RENDER_ENVIRONMENT
+
+    docker{
+        username = REPO_USERNAME
+        password = REPO_PASSWORD
+    }
+}
+
+artifactory {
+    clientConfig.setIncludeEnvVars(false)
+    contextUrl = SERVER_URL_PUBLISH
+    publish {
+        repository {
+            repoKey = REPO_PUBLISH
+            username = REPO_USERNAME
+            password = REPO_PASSWORD
+        }
+        defaults {
+            publications('renderedManifests')
+        }
+    }
+}
+
+publishing {
+    publications {
+        renderedManifests(MavenPublication) {
+            artifact assembleCharts
+        }
+    }
+}

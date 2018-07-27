@@ -1,0 +1,6 @@
+# Environment specific overrides
+# Repository with container images
+container_image_repo: artifactory.swg.usma.ibm.com:6562
+# replicas is the number of Pods to deploy
+replicas: "0"
+container_init_image_tag: "pass-integ_latest"

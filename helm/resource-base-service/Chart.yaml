@@ -1,0 +1,6 @@
+name: resource-base-service
+version: 0.0.1
+description: This is a chart containing the manifest files for resource-base-service
+home: https://github.ibm.com/connections-incubator/resource-base-service
+sources:
+  - https://github.ibm.com/connections-incubator/resource-base-service

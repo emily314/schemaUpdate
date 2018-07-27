@@ -1,0 +1,86 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{.Chart.Name}}
+spec:
+  replicas: {{required "A valid .Values.replicas entry required!" .Values.replicas}}
+  revisionHistoryLimit: {{required "A valid .Values.revision_history_limit entry required!" .Values.revision_history_limit}}
+  strategy:
+     rollingUpdate:
+       maxUnavailable: {{required "A valid .Values.max_unavailable entry required!" .Values.max_unavailable}}
+       maxSurge: {{required "A valid .Values.max_surge entry required!" .Values.max_surge}}
+  template:
+    metadata:
+      name: {{.Chart.Name}}
+      labels:
+        name: {{.Chart.Name}}
+        type: service
+      annotations:
+        watsonworkspace.com/build: {{required "A valid .Values.timestamp entry required!" .Values.timestamp}}
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: type
+                operator: In
+                values:
+                - "{{required "A valid .Values.node_type entry required!" .Values.node_type}}"
+      volumes:
+      - name: secrets
+        emptyDir: {}
+      - name: keys
+        secret:
+          secretName: envsecrets
+      - name: init-container-tls
+        configMap:
+          name: init-container-tls
+      initContainers:
+        - name: init-container-tls
+          image: {{required "A valid .Values.container_image_repo required!" .Values.container_image_repo}}/{{required "A valid .Values.container_init_image_name entry required!" .Values.container_init_image_name}}:{{required "A valid .Values.container_init_image_tag entry required!" .Values.container_init_image_tag}}
+          env:
+{{include "init_environment_variables" . | indent 12}}
+          volumeMounts:
+          - name: secrets
+            mountPath: /var/run/secrets/watsonwork.com
+          - name: init-container-tls
+            mountPath: /etc/init-container-tls
+      containers:
+        - name: {{.Chart.Name}}
+          image: {{required "A valid .Values.container_image_repo required!" .Values.container_image_repo}}/{{required "A valid .Values.container_image_name entry required!" .Values.container_image_name}}:{{.Values.tag}}{{required "A valid .Values.timestamp entry required!" .Values.timestamp}}
+          resources:
+            limits:
+              cpu: {{ .Values.resources.service.limits.cpu }}
+              memory: {{ .Values.resources.service.limits.memory }}
+            requests:
+              cpu: {{ .Values.resources.service.requests.cpu }}
+              memory: {{ .Values.resources.service.requests.memory }}          
+          env:
+{{include "environment_variables" . | indent 12}}
+          volumeMounts:
+            - name: secrets
+              mountPath: /var/run/secrets/watsonwork.com
+            - name: keys
+              mountPath: /keys
+          ports:
+            - name: http
+              containerPort: {{required "A valid .Values.port_http entry required!" .Values.port_http}}
+          readinessProbe:
+            httpGet:
+              path: /healthy
+              port: {{ .Values.port_http }}
+              scheme: HTTP
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          livenessProbe:
+            httpGet:
+              path: /healthy
+              port: {{ .Values.port_http }}
+              scheme: HTTP
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+      imagePullSecrets:
+        - name: {{required "A valid .Values.image_pull_secrets_name entry required!" .Values.image_pull_secrets_name}}

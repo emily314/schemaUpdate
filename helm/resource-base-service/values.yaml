@@ -1,0 +1,45 @@
+# replicas is the number of Pods to deploy
+replicas: "3"
+# revision_history_limit the amount of revisions we should keep
+revision_history_limit: "20"
+# max_unavailable the maximum number of Pods that can be unavailable during the update process
+max_unavailable: "20%"
+# max_surge the maximum number of Pods that can be created over the desired number of Pods
+max_surge: "30%"
+container_init_image_name: "init-container-tls"
+container_init_image_tag: "pass-integ_20171017-104157"
+# docker repository
+container_image_repo: "768118602852.dkr.ecr.us-east-1.amazonaws.com/toscana-docker"
+# container_image_name Image this service uses
+container_image_name: "resource-base-service"
+# node_type node type to be deployed too
+node_type: "service-generic"
+# port_http the http port the Pod uses
+port_http: "4000"
+# imagePullSecretsName Name of the secret that contains the docker registry credentials
+image_pull_secrets_name: "myregkey"
+
+resources:
+  service:
+    limits:
+      cpu: "0.5"
+      memory: "400Mi"
+    requests:
+      cpu: "0.05"
+      memory: "75Mi"
+  tester:
+    limits:
+      cpu: "0.5"
+      memory: "400Mi"
+    requests:
+      cpu: "0.05"
+      memory: "75Mi"
+
+livenessProbe:
+  periodSeconds: 30
+  initialDelaySeconds: 30
+  timeoutSeconds: 10
+readinessProbe:
+  periodSeconds: 30
+  initialDelaySeconds: 30
+  timeoutSeconds: 10

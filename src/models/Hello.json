@@ -1,0 +1,30 @@
+{
+  "name": "Hello",
+  "base": "PersistedModel",
+  "plural": "hello",
+  "idInjection": false,
+  "options": {
+    "validateUpsert": true,
+    "strictObjectIDCoercion": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "id": {
+      "type": "Number",
+      "id" : true
+    },
+    "isSingedUp": {
+      "type": "Boolean"
+    },
+    "new": {
+      "type": "string"
+    }
+  },
+  "hidden": ["id"],
+  "validations": [],
+  "acls": [],
+  "methods": {}
+}

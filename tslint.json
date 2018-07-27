@@ -1,0 +1,3 @@
+{
+  "extends": "@ibm-ics/tslint-config-ics"
+}

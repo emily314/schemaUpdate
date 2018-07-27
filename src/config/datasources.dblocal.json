@@ -1,0 +1,21 @@
+{
+  "helloDb": {
+    "name": "helloDb",
+    "connector": "mongodb",
+    "host": "127.0.0.1",
+    "database": "hellodb",
+    "port": 27017,
+    "allowExtendedOperators": true
+  },
+  "helloCassandraDb": {
+    "name": "helloCassandraDb",
+    "connector": "cassandra",
+    "database": "dev",
+    "keyspace": "dev",
+    "hostname": "127.0.0.1",
+    "user": "",
+    "password": "",
+    "connectTimeout": 30000,
+    "readTimeout": 30000
+  }
+}

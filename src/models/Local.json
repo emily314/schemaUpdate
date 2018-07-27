@@ -1,0 +1,23 @@
+{
+  "name": "Local",
+  "base": "PersistedModel",
+  "plural": "local",
+  "idInjection": false,
+  "options": {
+    "validateUpsert": true,
+    "strictObjectIDCoercion": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "id": {
+      "type": "Number",
+      "id" : true
+    }
+  },
+  "validations": [],
+  "acls": [],
+  "methods": {}
+}

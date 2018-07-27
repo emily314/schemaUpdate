@@ -1,0 +1,3 @@
+# Environment specific overrides
+# replicas is the number of Pods to deploy
+replicas: "1"

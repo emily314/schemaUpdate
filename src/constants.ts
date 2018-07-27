@@ -1,0 +1,16 @@
+export const KEY_JWT_HEADER: string = 'jwt';
+export const KEY_OAUTH_JWT_HEADER: string = 'Authorization';
+export const BEARER_TOKEN_PREFIX: string = 'bearer ';
+export const KEY_UUID_HEADER: string = 'uuid';
+export const KEY_SCOPE_HEADER: string = 'scope';
+export const KEY_CLIENTID_HEADER: string = 'clientId';
+export const KEY_EMAIL_HEADER: string = 'userEmail';
+export const KEY_DISPLAY_NAME_HEADER: string = 'displayName';
+export const KEY_USER_PERMISSIONS_HEADER: string = 'userPermissions';
+export const KEY_CLIENT_MUTATION_ID_HEADER: string = 'clientMutationId';
+export const KEY_REQUEST_ID_HEADER: string = 'requestId';
+export const HTTP_HEADER_PROXY_FORWARDED_FOR: string = 'X-FORWARDED-FOR';
+export const CLIENT_ADDRESS: string = 'clientAddress';
+export const HOST_NAME: string = 'hostName';
+export const HOST_PORT: string = 'hostPort';
+export const USER_ID_ATTRIBUTE: string = 'userId';

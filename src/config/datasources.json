@@ -1,0 +1,36 @@
+{
+  "helloDb": {
+    "name": "helloDb",
+    "file": "mydataHello.json",
+    "connector": "memory"
+  },
+  "helloCassandraDb": {
+    "name": "helloCassandraDb",
+    "file": "mydataHelloCassandra.json",
+    "connector": "memory"
+  },
+  "cassandra": {
+    "debug": "true",
+    "host": "127.0.0.1",
+    "port": 9042,
+    "keyspace": "content_base",
+    "createKeyspace": true,
+    "password": "",
+    "user": "",
+    "connectTimeout": 30000,
+    "readTimeout": 30000,
+    "connector": "ibmcassandra"
+  },
+  "sandboxcassandra": {
+    "debug": "true",
+    "host": "cassandradb",
+    "port": 9042,
+    "keyspace": "hello_base",
+    "createKeyspace": true,
+    "password": "Y2Fzc2FuZHJh",
+    "user": "Y2Fzc2FuZHJh",
+    "connectTimeout": 30000,
+    "readTimeout": 30000,
+    "connector": "ibmcassandra"
+  }
+}
